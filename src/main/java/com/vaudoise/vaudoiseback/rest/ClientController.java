@@ -54,7 +54,6 @@ public class ClientController {
         try {
             return ResponseEntity.ok(clientService.browse(query, pageable));
         } catch (Exception ex) {
-            log.error("Error fetching clients", ex);
             throw new CustomException(ErrorEnum.CLIENT_LIST, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

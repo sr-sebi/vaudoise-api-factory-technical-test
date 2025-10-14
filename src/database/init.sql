@@ -12,6 +12,16 @@ CREATE TABLE IF NOT EXISTS vaudoise_clients (
     company_id VARCHAR(50) UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS vaudoise_contracts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(36) NOT NULL UNIQUE,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    cost DECIMAL(15,2) NOT NULL,
+    client_id BIGINT,
+    CONSTRAINT fk_client FOREIGN KEY (client_id) REFERENCES vaudoise_clients(id) ON DELETE CASCADE
+);
+
 INSERT INTO vaudoise_clients (uuid, name, email, phone, client_type, birth_date)
 VALUES (UUID(), 'John Doe', 'john@example.com', '+1234567890', 'PERSON', '1980-01-01');
 

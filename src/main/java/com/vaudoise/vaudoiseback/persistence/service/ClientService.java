@@ -112,7 +112,7 @@ public class ClientService extends BaseJpaPersistence<ClientRepository, Client, 
     @Transactional
     public ClientResponse delete(Long id) throws CustomException {
         Client client = findById(id);
-        clientRepository.delete(client);
+        clientRepository.delete(client.getId());
         return new ClientResponse(client);
     }
 

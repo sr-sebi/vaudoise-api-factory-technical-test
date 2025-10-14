@@ -23,7 +23,18 @@ public enum ErrorEnum {
     CLIENT_CREATE(1103, "Cannot create the client"),
     CLIENT_UPDATE(1104, "Cannot update the client"),
     CLIENT_DELETE(1105, "Cannot delete the client"),
-    CLIENT_VALIDATION(1106, "Client parameters are not valid"),;
+    CLIENT_VALIDATION(1106, "Client parameters are not valid"),
+
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    // >>>>>> CONTRACTS (1200 - 1299)
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    CONTRACT_NOT_FOUND(1200, "Contract not found"),
+    CONTRACT_LIST(1201, "Cannot list contracts"),
+    CONTRACT_READ(1202, "Cannot read the contract"),
+    CONTRACT_CREATE(1203, "Cannot create the contract"),
+    CONTRACT_UPDATE(1204, "Cannot update the contract"),
+    CONTRACT_DELETE(1205, "Cannot delete the contract"),
+    CONTRACT_VALIDATION(1206, "Contract parameters are not valid");
 
     /**
      * Error identification code

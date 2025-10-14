@@ -1,5 +1,8 @@
 package com.vaudoise.vaudoiseback.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcType;
@@ -7,6 +10,8 @@ import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,19 +29,28 @@ public abstract class Client implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    @Column(name = "id")
     private Long id;
 
     @JdbcType(VarcharJdbcType.class)
-    @Column(unique = true, nullable = false)
+    @Column(name = "uuid", unique = true, nullable = false)
     @EqualsAndHashCode.Include
     private UUID uuid = UUID.randomUUID();
 
-    @Column(nullable = false)
+    @Column(name = "name", columnDefinition = "text", nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", columnDefinition = "text", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "phone", columnDefinition = "text",nullable = false)
     private String phone;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @JsonBackReference
+    @Schema(hidden = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contract> contracts = new ArrayList<>();
 }
