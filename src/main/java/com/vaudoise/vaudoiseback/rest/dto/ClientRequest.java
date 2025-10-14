@@ -6,10 +6,13 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 public class ClientRequest implements Serializable {
+    private Long id;
+    private UUID uuid;
     private ClientType type;
     private String name;
     private String email;

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -129,12 +130,37 @@ public class ClientService extends BaseJpaPersistence<ClientRepository, Client, 
             throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
         }
 
-        if (request.getType().equals(ClientType.PERSON) && request.getBirthDate() == null) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        if (!request.getEmail().matches(emailRegex)) {
             throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+        }
+
+        String phoneRegex = "^\\+?[0-9]{7,15}$";
+        if (!request.getPhone().matches(phoneRegex)) {
+            throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getType().equals(ClientType.PERSON)) {
+            if (request.getBirthDate() == null) {
+                throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+            }
+            if (request.getBirthDate().isAfter(LocalDate.now())) {
+                throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+            }
         }
 
         if (request.getType().equals(ClientType.COMPANY) && !StringUtils.hasText(request.getCompanyId())) {
             throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+        }
+
+        if (Boolean.TRUE.equals(updating)) {
+            if (request.getUuid() == null) {
+                throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            if (clientRepository.existsByEmail(request.getEmail())) {
+                throw new CustomException(ErrorEnum.CLIENT_VALIDATION, HttpStatus.BAD_REQUEST);
+            }
         }
     }
 }
