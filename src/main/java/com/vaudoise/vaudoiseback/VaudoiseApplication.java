@@ -41,6 +41,10 @@ public class VaudoiseApplication {
             log.info("   ➤ Local:      http://localhost:{}{}", serverPort, contextPath);
             log.info("   ➤ External:   http://{}:{}{}", hostAddress, serverPort, contextPath);
             log.info("------------------------------------------------------------");
+            log.info("📖 Swagger / OpenAPI URLs:");
+            log.info("   ➤ OpenAPI JSON:      http://localhost:{}{}/v3/api-docs", serverPort, contextPath);
+            log.info("   ➤ Swagger UI:        http://localhost:{}{}/swagger-ui/index.html", serverPort, contextPath);
+            log.info("------------------------------------------------------------");
             log.info("🕒 Active profiles: {}", (Object) env.getActiveProfiles());
             log.info("------------------------------------------------------------");
 

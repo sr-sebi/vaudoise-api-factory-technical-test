@@ -16,6 +16,7 @@ Includes **Docker Compose** integration to easily spin up the database and **php
 | **DB Admin** | phpMyAdmin |
 | **Dependency Manager** | Maven |
 | **Containers** | Docker Compose |
+| **API Documentation** | Swagger UI |
 
 ## Architecture and design
 
@@ -93,6 +94,9 @@ mvn spring-boot:run
   - Database: `vaudoise_db`
   - User: `vaudoise_user`
   - Password: `vaudoise_pass`
+
+
+- **Swagger UI**: `http://localhost:8080/api/swagger-ui/index.html`
 
 ---
 ## 🧠 Notes
