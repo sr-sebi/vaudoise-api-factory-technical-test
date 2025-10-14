@@ -25,6 +25,7 @@ public enum ErrorEnum {
     CLIENT_DELETE(1105, "Cannot delete the client"),
     CLIENT_VALIDATION(1106, "Client parameters are not valid"),
     CLIENT_CONTRACT_LIST(1107, "Cannot list contracts for the client"),
+    CLIENT_CONTRACT_SUM(1108, "Cannot sum contracts for the client"),
 
     // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     // >>>>>> CONTRACTS (1200 - 1299)

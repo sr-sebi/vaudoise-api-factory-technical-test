@@ -89,6 +89,28 @@ public class ClientController {
     }
 
     @Operation(
+            summary = "Get sum of active contracts for a client",
+            description = "Returns the total sum of all active contracts for a specific client"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Sum of active contracts for the client"),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error code - If the sum cannot be retrieved due to an internal error",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})
+    })
+    @GetMapping(value = "/{clientId}/contracts/active/sum", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getSumOfActiveContracts(@PathVariable Long clientId) throws CustomException {
+        try {
+            return ResponseEntity.ok(clientService.getSumOfActiveContracts(clientId).toString());
+        } catch (Exception ex) {
+            throw new CustomException(ErrorEnum.CLIENT_CONTRACT_SUM, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
             summary = "Fetch an existing client",
             description = "Fetches an existing client and returns it"
     )

@@ -83,6 +83,11 @@ public class ContractService extends BaseJpaPersistence<ContractRepository, Cont
         return contractRepository.findAll(spec, pageable).map(ContractResponse::new);
     }
 
+    @Transactional(readOnly = true)
+    public BigDecimal getSumOfActiveContractsByClientId(Long clientId) {
+        return contractRepository.sumActiveContractCostsByClientId(clientId);
+    }
+
     // ---------------- Read ----------------
     @Transactional(readOnly = true)
     public ContractResponse read(Long id) throws CustomException {

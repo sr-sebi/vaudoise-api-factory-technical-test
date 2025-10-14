@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Service
@@ -60,6 +61,13 @@ public class ClientService extends BaseJpaPersistence<ClientRepository, Client, 
         Client client = findById(clientId);
 
         return contractService.getActiveContractsByClientId(client.getId(), updatedAfter, updatedBefore, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal getSumOfActiveContracts(Long clientId) throws CustomException {
+        Client client = findById(clientId);
+
+        return contractService.getSumOfActiveContractsByClientId(client.getId());
     }
 
     // ---------------- Read ----------------
