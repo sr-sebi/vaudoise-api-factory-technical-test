@@ -9,6 +9,7 @@ import com.vaudoise.vaudoiseback.persistence.entities.enums.ClientType;
 import com.vaudoise.vaudoiseback.persistence.repositories.ClientRepository;
 import com.vaudoise.vaudoiseback.rest.dto.ClientRequest;
 import com.vaudoise.vaudoiseback.rest.dto.ClientResponse;
+import com.vaudoise.vaudoiseback.rest.dto.ContractResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -19,18 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class ClientService extends BaseJpaPersistence<ClientRepository, Client, Long> {
 
     private final ClientRepository clientRepository;
+    private final ContractService contractService;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, ContractService contractService) {
         super(clientRepository);
         this.clientRepository = clientRepository;
+        this.contractService = contractService;
     }
 
     // ---------------- Browse ----------------
@@ -51,6 +53,13 @@ public class ClientService extends BaseJpaPersistence<ClientRepository, Client, 
         );
 
         return clientRepository.findAll(spec, pageable).map(ClientResponse::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ContractResponse> getActiveContracts(Long clientId, LocalDate updatedAfter, LocalDate updatedBefore, Pageable pageable) throws CustomException {
+        Client client = findById(clientId);
+
+        return contractService.getActiveContractsByClientId(client.getId(), updatedAfter, updatedBefore, pageable);
     }
 
     // ---------------- Read ----------------

@@ -5,6 +5,7 @@ import com.vaudoise.vaudoiseback.exception.ErrorEnum;
 import com.vaudoise.vaudoiseback.persistence.service.ClientService;
 import com.vaudoise.vaudoiseback.rest.dto.ClientRequest;
 import com.vaudoise.vaudoiseback.rest.dto.ClientResponse;
+import com.vaudoise.vaudoiseback.rest.dto.ContractResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/v1/clients")
@@ -55,6 +58,33 @@ public class ClientController {
             return ResponseEntity.ok(clientService.browse(query, pageable));
         } catch (Exception ex) {
             throw new CustomException(ErrorEnum.CLIENT_LIST, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(
+            summary = "List active contracts for a client",
+            description = "Returns a page of active contracts for a specific client, optionally filtered by update date range"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "A page of active contracts for the client"),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Error code - If contracts cannot be retrieved due to an internal error",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = MediaType.APPLICATION_JSON_VALUE)})
+    })
+    @GetMapping(value = "/{clientId}/contracts/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<ContractResponse>> getActiveContracts(
+            @PathVariable Long clientId,
+            @RequestParam(value = "updatedAfter", required = false) LocalDate updatedAfter,
+            @RequestParam(value = "updatedBefore", required = false) LocalDate updatedBefore,
+            @ParameterObject @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
+    ) throws CustomException {
+        try {
+            return ResponseEntity.ok(clientService.getActiveContracts(clientId, updatedAfter, updatedBefore, pageable));
+        } catch (Exception ex) {
+            throw new CustomException(ErrorEnum.CLIENT_CONTRACT_LIST, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

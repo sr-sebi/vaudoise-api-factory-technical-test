@@ -11,6 +11,7 @@ import com.vaudoise.vaudoiseback.rest.dto.ContractResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,34 @@ public class ContractService extends BaseJpaPersistence<ContractRepository, Cont
                 pageable,
                 contracts.size()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ContractResponse> getActiveContractsByClientId(Long clientId, LocalDate updatedAfter, LocalDate updatedBefore, Pageable pageable) {
+        Specification<Contract> spec = (root, query, cb) -> {
+            var predicates = cb.conjunction();
+
+            predicates.getExpressions().add(
+                    cb.or(
+                            cb.isNull(root.get("endDate")),
+                            cb.greaterThan(root.get("endDate"), LocalDate.now())
+                    )
+            );
+
+            predicates.getExpressions().add(cb.equal(root.get("client").get("id"), clientId));
+
+            if (updatedAfter != null) {
+                predicates.getExpressions().add(cb.greaterThanOrEqualTo(root.get("updatedAt"), updatedAfter.atStartOfDay()));
+            }
+
+            if (updatedBefore != null) {
+                predicates.getExpressions().add(cb.lessThanOrEqualTo(root.get("updatedAt"), updatedBefore.atTime(23, 59, 59)));
+            }
+
+            return predicates;
+        };
+
+        return contractRepository.findAll(spec, pageable).map(ContractResponse::new);
     }
 
     // ---------------- Read ----------------
