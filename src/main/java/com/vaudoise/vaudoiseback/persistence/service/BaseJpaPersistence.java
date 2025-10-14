@@ -1,6 +1,6 @@
 package com.vaudoise.vaudoiseback.persistence.service;
 
-import com.vaudoise.vaudoiseback.config.aop.LogServiceMethod;
+import com.vaudoise.vaudoiseback.config.logging.LogServiceMethod;
 import com.vaudoise.vaudoiseback.persistence.repositories.BaseJpaRepository;
 import com.vaudoise.vaudoiseback.persistence.specification.SpecificationUtils;
 import org.springframework.data.domain.Page;
