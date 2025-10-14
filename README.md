@@ -23,13 +23,41 @@ Includes **Docker Compose** integration to easily spin up the database and **php
 For this test, I chose to follow my usual approach to building standard boilerplate applications for my usual projects. 
 It includes extended JPA management, specifications to allow dynamic filtering and more complex queries, swagger documentation, logging and custom exceptions handling for better error management, and a clear separation of concerns.
 
-
 The project follows a layered architecture using Spring Boot and JPA to allow for easy management of entities and relationships. 
 The domain layer defines abstract Client with Single Table Inheritance, allowing PersonClient and CompanyClient to share the same table but store type-specific fields (birthDate vs companyId).
 
 The service layer handles business logic, validation, and transactional operations, exposing CRUD and paginated/filterable queries via the REST controller layer, which manages API responses consistently with custom exceptions.
 
 Docker Compose manages MariaDB and phpMyAdmin for easy deployment, the latter providing a user-friendly interface for database administration.
+
+- Config:
+  - Logging:
+    - LogServiceMethod: Logs entry and exit of service methods with parameters and execution time.
+    - RequestLoggingFilter: Logs incoming HTTP requests.
+  - Security:
+    - SecurityConfig: Basic authentication for Swagger UI.
+    - WebConfig: Allows paging, sorting and serialization.
+- Exception:
+  - CustomException: Base class for custom exceptions.
+  - ErrorEnum: Standardized error codes and messages.
+  - GlobalExceptionHandler: Centralized exception handling for consistent API error responses.
+- Persistence:
+  - Entities: Client (abstract), PersonClient, CompanyClient.
+  - Repositories: ClientRepository with JpaSpecificationExecutor for dynamic queries.
+  - Service: Business logic and validation.
+  - Specification: Dynamic filtering for queries.
+- Rest:
+  - Controllers: REST endpoints for CRUD operations and filtering.
+  - DTOs: Data Transfer Objects for API requests and responses.
+
+## Why it works?
+- **Simplicity**: Clear separation of concerns with well-defined layers (Controller, Service, Repository).
+- **Maintainability**: Use of DTOs, custom exceptions, and centralized logging makes the codebase easy to maintain and extend.
+- **Scalability**: Dynamic filtering with Specifications allows for flexible querying as requirements evolve.
+- **User-Friendly**: Swagger UI provides an interactive API documentation and testing interface.
+- **Ease of Deployment**: Docker Compose simplifies the setup of the database and admin interface.
+
+You can easily test the application using the provided Swagger UI or any API client like Postman.
 
 ---
 
@@ -97,6 +125,8 @@ mvn spring-boot:run
 
 
 - **Swagger UI**: `http://localhost:8080/api/swagger-ui/index.html`
+  - User: `vaudoise_user`
+  - Password: `vaudoise_pass`
 
 ---
 ## 🧠 Notes
