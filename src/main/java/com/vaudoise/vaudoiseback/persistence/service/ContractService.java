@@ -128,9 +128,7 @@ public class ContractService extends BaseJpaPersistence<ContractRepository, Cont
             contract.setClient(client);
         }
 
-        // Update startDate only if provided; otherwise keep existing
         contract.setStartDate(request.getStartDate() != null ? request.getStartDate() : contract.getStartDate());
-        // Update endDate (null allowed)
         contract.setEndDate(request.getEndDate());
         contract.setCost(request.getCost());
 
@@ -162,7 +160,7 @@ public class ContractService extends BaseJpaPersistence<ContractRepository, Cont
             throw new CustomException(ErrorEnum.CONTRACT_VALIDATION, HttpStatus.BAD_REQUEST);
         }
 
-        if (request.getCost() == null || request.getCost().compareTo(BigDecimal.ZERO) < 0) {
+        if (request.getCost() == null || request.getCost().compareTo(BigDecimal.ZERO) <= 0) {
             throw new CustomException(ErrorEnum.CONTRACT_VALIDATION, HttpStatus.BAD_REQUEST);
         }
 
