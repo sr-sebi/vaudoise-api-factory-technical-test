@@ -9,7 +9,11 @@ CREATE TABLE IF NOT EXISTS vaudoise_clients (
     phone VARCHAR(50) NOT NULL,
     client_type VARCHAR(50) NOT NULL,
     birth_date DATE,
-    company_id VARCHAR(50) UNIQUE
+    company_id VARCHAR(50) UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(255) NOT NULL DEFAULT 'SUPER_ADMIN',
+    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    modified_by VARCHAR(255) NOT NULL DEFAULT 'SUPER_ADMIN'
 );
 
 CREATE TABLE IF NOT EXISTS vaudoise_contracts (
@@ -19,8 +23,15 @@ CREATE TABLE IF NOT EXISTS vaudoise_contracts (
     end_date DATE,
     cost DECIMAL(15,2) NOT NULL,
     client_id BIGINT,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(255) NOT NULL DEFAULT 'SUPER_ADMIN',
+    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    modified_by VARCHAR(255) NOT NULL DEFAULT 'SUPER_ADMIN',
     CONSTRAINT fk_client FOREIGN KEY (client_id) REFERENCES vaudoise_clients(id) ON DELETE CASCADE
 );
+
+INSERT INTO vaudoise_clients (uuid, name, email, phone, client_type, birth_date)
+VALUES (UUID(), 'SUPER_ADMIN', 'admin@example.com', '+1000000000', 'PERSON', '1970-01-01');
 
 INSERT INTO vaudoise_clients (uuid, name, email, phone, client_type, birth_date)
 VALUES (UUID(), 'John Doe', 'john@example.com', '+1234567890', 'PERSON', '1980-01-01');

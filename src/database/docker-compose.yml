@@ -32,7 +32,7 @@ services:
       - vaudoise_net
 
 volumes:
-  db_data:
+  db_data: {}
 
 networks:
   vaudoise_net:
