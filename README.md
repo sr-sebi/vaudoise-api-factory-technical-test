@@ -43,6 +43,7 @@ Docker Compose manages MariaDB and phpMyAdmin for easy deployment, the latter pr
   - GlobalExceptionHandler: Centralized exception handling for consistent API error responses.
 - Persistence:
   - Entities: Client (abstract), PersonClient, CompanyClient.
+    - Auditable: Base class for entities with createdAt and updatedAt timestamps.
   - Repositories: ClientRepository with JpaSpecificationExecutor for dynamic queries.
   - Service: Business logic and validation.
   - Specification: Dynamic filtering for queries.
@@ -56,6 +57,7 @@ Docker Compose manages MariaDB and phpMyAdmin for easy deployment, the latter pr
 - **Scalability**: Dynamic filtering with Specifications allows for flexible querying as requirements evolve.
 - **User-Friendly**: Swagger UI provides an interactive API documentation and testing interface.
 - **Ease of Deployment**: Docker Compose simplifies the setup of the database and admin interface.
+- **Auditability**: Creation and update are tracked with timestamps.
 
 You can easily test the application using the provided Swagger UI or any API client like Postman.
 
@@ -66,8 +68,8 @@ You can easily test the application using the provided Swagger UI or any API cli
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/vaudoise-backend.git
-cd vaudoise-backend
+git clone https://github.com/sr-sebi/vaudoise-api-factory-technical-test.git
+cd vaudoise-api-factory-technical-test
 ```
 
 ### 2️⃣ Configure the Database
@@ -82,8 +84,15 @@ docker-compose up -d
 ``
 ✅ This will create the containers and the database vaudoise_db with initial tables.
 
+
+If you need to reset the database, run:
+```
+docker compose down -v
+docker compose up
+```
+
 ### 3️⃣ Configure Database Connection
-Update the `src/main/resources/config/application.yml` file with your database credentials if necessary:
+Update the `src/main/resources/config/appplication.properties` file with your database credentials if necessary:
 ```properties
 # MariaDB (Docker)
 spring.datasource.url=jdbc:mariadb://localhost:3306/vaudoise_db
@@ -92,8 +101,9 @@ spring.datasource.password=vaudoise_pass
 spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 
 # JPA / Hibernate
-spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=none
 spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=false
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MariaDBDialect
 
 # Server
@@ -131,8 +141,10 @@ mvn spring-boot:run
 ---
 ## 🧠 Notes
 - ISO 8601 → LocalDate fields in Spring Boot are automatically serialized in ISO format (YYYY-MM-DD).
-- Database is auto-created on application start using spring.jpa.hibernate.ddl-auto=update.
+- Database is auto-created on application start.
 - Initial tables can be defined in docker/init.sql.
+- Swagger UI is protected with basic auth for security.
+- Audit fields (createdAt, updatedAt) are automatically managed.
 
 ---
 ## 👨‍💻 Author
